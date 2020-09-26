@@ -12,7 +12,7 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     ciphertext = ""
     for index, element in enumerate(plaintext):
         shift_alpha = keyword[index % len(keyword)]
-        shift = ord((shift_alpha).lower()) - ord('a')
+        shift = ord((shift_alpha).lower()) - ord("a")
         if element.isalpha() != 0 and shift != 0:
             a = ord(element)
             if a >= 97 and a <= 122:
@@ -46,7 +46,7 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     plaintext = ""
     for index, element in enumerate(ciphertext):
         shift_alpha = keyword[index % len(keyword)]
-        shift = ord((shift_alpha).lower()) - ord('a')
+        shift = ord((shift_alpha).lower()) - ord("a")
         if element.isalpha() != 0 and shift != 0:
             a = ord(element)
             if a >= 97 and a <= 122:
@@ -64,4 +64,6 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
         else:
             plaintext += element
     return plaintext
-#For commit
+
+
+# For commit
