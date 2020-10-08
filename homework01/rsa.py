@@ -14,15 +14,13 @@ def is_prime(n: int) -> bool:
     False
     """
     number = n
-    k = 2
     if number == 1:
         return False
     else:
         for i in range(2, n):
             if number % i == 0:
-                k += 1
-                i += 1
-        return True if k == 2 else False
+                return False
+        return True
 
 
 def gcd(a: int, b: int) -> int:
@@ -36,7 +34,7 @@ def gcd(a: int, b: int) -> int:
     """
     first = a
     second = b
-    while (first and second) != 0:
+    while first and second:
         if first < second:
             second = second % first
         elif first > second:
@@ -46,23 +44,30 @@ def gcd(a: int, b: int) -> int:
     return second if second != 0 else first
 
 
+def egcd(e: int, b: int) -> tp.Tuple[int, int, int]:
+    """
+    Euclid's extended algorithm
+
+    >>> egcd(7,40)
+    (1, 3, -17)
+    """
+    if e % b == 0:
+        return b, 0, 1
+    else:
+        if b > e:
+            e, b = b, e
+        g, x, y = egcd(b, e % b)
+        return g, y, x - (e // b) * y
+
+
 def multiplicative_inverse(e: int, phi: int) -> int:
     """
-    Euclid's extended algorithm for finding the multiplicative
+    Finding the multiplicative
     inverse of two numbers.
 
     >>> multiplicative_inverse(7, 40)
     23
     """
-
-    def egcd(e, b):
-        if e % b == 0:
-            return b, 0, 1
-        else:
-            if b > e:
-                e, b = b, e
-            g, x, y = egcd(b, e % b)
-            return g, y, x - (e // b) * y
 
     g, x, y = egcd(e, phi)
     return y % phi

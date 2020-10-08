@@ -13,17 +13,17 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     for index, element in enumerate(plaintext):
         shift_alpha = keyword[index % len(keyword)]
         shift = ord((shift_alpha).lower()) - ord("a")
-        if element.isalpha() != 0 and shift != 0:
+        if element.isalpha() and shift != 0:
             char_index = ord(element)
-            if 97 <= char_index <= 122:
+            if ord("a") <= char_index <= ord("z"):
                 char_index = char_index + shift
-                if char_index > 122:
+                if char_index > ord("z"):
                     char_index = char_index - 26
                 cipher_char = chr(char_index)
                 ciphertext += cipher_char
-            elif 65 <= char_index <= 90:
+            elif ord("A") <= char_index <= ord("Z"):
                 char_index = char_index + shift
-                if char_index > 90:
+                if char_index > ord("Z"):
                     char_index = char_index - 26
                 cipher_char = chr(char_index)
                 ciphertext += cipher_char
@@ -47,23 +47,22 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     for index, element in enumerate(ciphertext):
         shift_alpha = keyword[index % len(keyword)]
         shift = ord((shift_alpha).lower()) - ord("a")
-        if element.isalpha() != 0 and shift != 0:
+        if element.isalpha() and shift != 0:
             char_index = ord(element)
-            if 97 <= char_index <= 122:
+            if ord("a") <= char_index <= ord("z"):
                 char_index = char_index - shift
-                if char_index < 97:
+                if char_index < ord("a"):
                     char_index = char_index + 26
                 plain_char = chr(char_index)
                 plaintext += plain_char
-            elif 65 <= char_index <= 90:
+            elif ord("A") <= char_index <= ord("Z"):
                 char_index = char_index - shift
-                if char_index < 65:
+                if char_index < ord("A"):
                     char_index = char_index + 26
                 plain_char = chr(char_index)
                 plaintext += plain_char
         else:
             plaintext += element
     return plaintext
-
 
 # For commit

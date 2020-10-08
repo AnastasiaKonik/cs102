@@ -13,17 +13,17 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     """
     ciphertext = ""
     for char in plaintext:
-        if char.isalpha() != 0:
+        if char.isalpha():
             char_index = ord(char)
-            if 97 <= char_index <= 122:
+            if ord("a") <= char_index <= ord("z"):
                 char_index = char_index + shift
-                if char_index > 122:
+                if char_index > ord("z"):
                     char_index = char_index - 26
                 ciphered_char = chr(char_index)
                 ciphertext += ciphered_char
-            elif 65 <= char_index <= 90:
+            elif ord("A") <= char_index <= ord("Z"):
                 char_index = char_index + shift
-                if char_index > 90:
+                if char_index > ord("Z"):
                     char_index = char_index - 26
                 ciphered_char = chr(char_index)
                 ciphertext += ciphered_char
@@ -47,17 +47,17 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     """
     plaintext = ""
     for char in ciphertext:
-        if char.isalpha() != 0:
+        if char.isalpha():
             char_index = ord(char)
-            if 97 <= char_index <= 122:
+            if ord("a") <= char_index <= ord("z"):
                 char_index = char_index - shift
-                if char_index < 97:
+                if char_index < ord("a"):
                     char_index = char_index + 26
                 plain_char = chr(char_index)
                 plaintext += plain_char
-            elif 65 <= char_index <= 90:
+            elif ord("A") <= char_index <= ord("Z"):
                 char_index = char_index - shift
-                if char_index < 65:
+                if char_index < ord("A"):
                     char_index = char_index + 26
                 plain_char = chr(char_index)
                 plaintext += plain_char
