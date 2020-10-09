@@ -1,6 +1,3 @@
-import typing as tp
-
-
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     """
     Encrypts plaintext using a Caesar cipher.
@@ -15,7 +12,23 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
-    # PUT YOUR CODE HERE
+    for char in plaintext:
+        if char.isalpha():
+            char_index = ord(char)
+            if ord("a") <= char_index <= ord("z"):
+                char_index = char_index + shift
+                if char_index > ord("z"):
+                    char_index = char_index - 26
+                ciphered_char = chr(char_index)
+                ciphertext += ciphered_char
+            elif ord("A") <= char_index <= ord("Z"):
+                char_index = char_index + shift
+                if char_index > ord("Z"):
+                    char_index = char_index - 26
+                ciphered_char = chr(char_index)
+                ciphertext += ciphered_char
+        else:
+            ciphertext += char
     return ciphertext
 
 
@@ -33,14 +46,21 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     ''
     """
     plaintext = ""
-    # PUT YOUR CODE HERE
+    for char in ciphertext:
+        if char.isalpha():
+            char_index = ord(char)
+            if ord("a") <= char_index <= ord("z"):
+                char_index = char_index - shift
+                if char_index < ord("a"):
+                    char_index = char_index + 26
+                plain_char = chr(char_index)
+                plaintext += plain_char
+            elif ord("A") <= char_index <= ord("Z"):
+                char_index = char_index - shift
+                if char_index < ord("A"):
+                    char_index = char_index + 26
+                plain_char = chr(char_index)
+                plaintext += plain_char
+        else:
+            plaintext += char
     return plaintext
-
-
-def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
-    """
-    Brute force breaking a Caesar cipher.
-    """
-    best_shift = 0
-    # PUT YOUR CODE HERE
-    return best_shift
