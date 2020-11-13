@@ -3,7 +3,7 @@ import pathlib
 import random
 
 import pygame
-from pygame.locals import *
+from pygame.constants import K_SPACE, KEYDOWN, MOUSEBUTTONUP, QUIT, K_s
 
 from life import GameOfLife
 from ui import UI

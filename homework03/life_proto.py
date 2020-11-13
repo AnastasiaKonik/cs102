@@ -3,7 +3,7 @@ import copy
 import pygame
 import random
 
-from pygame.locals import *
+from pygame.constants import QUIT
 from typing import List, Tuple
 
 Cell = Tuple[int, int]
