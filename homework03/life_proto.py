@@ -80,8 +80,7 @@ class GameOfLife:
         out : Grid
             Матрица клеток размером `cell_height` х `cell_width`.
         """
-        grid: Grid
-        grid = []
+        grid: Grid = []
         for y in range(0, self.cell_height):
             grid.append([])
             for x in range(0, self.cell_width):

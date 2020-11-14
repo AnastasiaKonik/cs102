@@ -29,8 +29,7 @@ class GameOfLife:
         self.generations = 1
 
     def create_grid(self, randomize: bool = False) -> Grid:
-        grid: Grid
-        grid = []
+        grid: Grid = []
         for y in range(0, self.rows):
             grid.append([])
             for x in range(0, self.cols):
@@ -73,9 +72,10 @@ class GameOfLife:
         """
         Выполнить один шаг игры.
         """
-        self.prev_generation = self.curr_generation
-        self.curr_generation = self.get_next_generation()
-        self.generations += 1
+        if not self.is_max_generations_exceeded:
+            self.prev_generation = self.curr_generation
+            self.curr_generation = self.get_next_generation()
+            self.generations += 1
 
     @property
     def is_max_generations_exceeded(self) -> bool:
@@ -96,8 +96,7 @@ class GameOfLife:
         """
         Прочитать состояние клеток из указанного файла.
         """
-        grid: Grid
-        grid = []
+        grid: Grid = []
         with filename.open() as f:
             for line in f.read().split():
                 grid.append([])

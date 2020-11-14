@@ -41,6 +41,8 @@ class Console(UI):
                 pause = not pause
             if event == ord("s"):
                 self.life.save(pathlib.Path("My game"))
+            if event == ord("q"):
+                running = False
             if not pause:
                 self.draw_grid(screen)
                 screen.refresh()
