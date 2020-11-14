@@ -44,33 +44,43 @@ def gcd(a: int, b: int) -> int:
     return second if second != 0 else first
 
 
-def egcd(e: int, b: int) -> tp.Tuple[int, int, int]:
-    """
-    Euclid's extended algorithm
-
-    >>> egcd(7,40)
-    (1, 3, -17)
-    """
-    if e % b == 0:
-        return b, 0, 1
-    else:
-        if b > e:
-            e, b = b, e
-        g, x, y = egcd(b, e % b)
-        return g, y, x - (e // b) * y
-
-
 def multiplicative_inverse(e: int, phi: int) -> int:
     """
-    Finding the multiplicative
+    Euclid's extended algorithm for finding the multiplicative
     inverse of two numbers.
 
     >>> multiplicative_inverse(7, 40)
     23
     """
+    if phi > e:
+        e, phi = phi, e
+    a = e
+    b = phi
+    if a % b == 0:
+        return 0
+    else:
+        s1 = [e]
+        s2 = [phi]
+        n = 0
+        while b != 1:
+            n += 1
+            c = a
+            a = b
+            b = c % b
+            s1.append(a)
+            s2.append(b)
 
-    g, x, y = egcd(e, phi)
-    return y % phi
+        x = a % b
+        y = b
+        while a < e:
+            a = s1[n - 1]
+            b = s2[n - 1]
+            z = x
+            x = y
+            y = z - (a // b) * y
+            n = n - 1
+
+    return y % e
 
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
