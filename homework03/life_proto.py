@@ -100,7 +100,7 @@ class GameOfLife:
                 if self.grid[y][x] == 1:
                     pygame.draw.rect(
                         self.screen,
-                        pygame.Color("green"),
+                        pygame.Color(0, 255, 0),
                         (
                             x * self.cell_size + 1,
                             y * self.cell_size + 1,
