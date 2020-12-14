@@ -49,6 +49,11 @@ def commit_tree(
     parent: tp.Optional[str] = None,
     author: tp.Optional[str] = None,
 ) -> str:
+    if author is None and "GIT_AUTHOR_NAME" in os.environ and "GIT_AUTHOR_EMAIL" in os.environ:
+        author = (
+                os.getenv("GIT_AUTHOR_NAME", None)  # type:ignore
+                + f'<{os.getenv("GIT_AUTHOR_EMAIL", None)}>'  # type:ignore
+        )  # type:ignore
     timezone_int = time.timezone
     if timezone_int > 0:
         timezone_str = "-" + f"{abs(timezone_int) // 3600:02}{abs(timezone_int) // 60 % 60:02}"
