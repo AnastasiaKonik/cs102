@@ -100,7 +100,11 @@ def get_mutual(
             time.sleep(1)
         for item in r["response"]:
             result.append(
-                MutualFriends(id=item["id"], common_friends=item["common_friends"], common_count=item["common_count"])
+                MutualFriends(
+                    id=item["id"],
+                    common_friends=item["common_friends"],
+                    common_count=item["common_count"],
+                )
             )
 
     return result

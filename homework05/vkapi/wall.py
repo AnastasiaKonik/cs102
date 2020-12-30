@@ -94,9 +94,13 @@ def get_wall_execute(
         raise APIError(response["error"]["error_msg"])
     if progress is None:
         progress = lambda x: x
-    for _ in progress(range(0, math.ceil((response["response"]["count"] if count == 0 else count) / max_count))):
+    for _ in progress(
+        range(0, math.ceil((response["response"]["count"] if count == 0 else count) / max_count))
+    ):
         data_frame = data_frame.append(
-            json_normalize(get_posts_2500(owner_id, domain, offset, count, max_count, filter, extended, fields))
+            json_normalize(
+                get_posts_2500(owner_id, domain, offset, count, max_count, filter, extended, fields)
+            )
         )
         time.sleep(1)
     return data_frame
