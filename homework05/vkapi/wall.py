@@ -22,24 +22,22 @@ def get_posts_2500(
     fields: tp.Optional[tp.List[str]] = None,
 ) -> tp.Dict[str, tp.Any]:
     script = f"""
-                    var i = 0; 
-                    var result = [];
-                    while i < {max_count} {{
-                        result.push(
-                                    API.wall.get(
-    {{
-        "owner_id": "{owner_id}",
-        "domain": "{domain}",
-        "offset": "{offset} +i",
-        "count": "{count}",
-        "filter": "{filter}",
-        "extended": "{extended}",
-        "fields": "{fields}"
-    }}
-                                            )
-                                    )
-                        i = i + {count}
-                    }}return ;
+    var i = 0; 
+    var result = [];
+        while i < {max_count} {{
+            result.push(API.wall.get(
+                        {{
+                            "owner_id": "{owner_id}",
+                            "domain": "{domain}",
+                            "offset": "{offset} +i",
+                            "count": "{count}",
+                            "filter": "{filter}",
+                            "extended": "{extended}",
+                            "fields": "{fields}"
+                        }}));
+            i = i + 100;
+        }}
+    return result;
                 """
     data = {"code": script}
     response = session.post("/execute", data=data).json()

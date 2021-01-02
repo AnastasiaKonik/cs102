@@ -6,6 +6,19 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
 
+class TimeoutHTTPAdapter(HTTPAdapter):
+    def __init__(self, *args, **kwargs):
+        self.timeout = kwargs["timeout"]
+        del kwargs["timeout"]
+        super().__init__(*args, **kwargs)
+
+    def send(self, request, **kwargs):
+        timeout = kwargs.get("timeout")
+        if timeout is None:
+            kwargs["timeout"] = self.timeout
+        return super().send(request, **kwargs)
+
+
 class Session(requests.Session):
     """
     Сессия.
@@ -25,23 +38,19 @@ class Session(requests.Session):
     ) -> None:
         super().__init__()
         self.base_url = base_url
-        self.timeout = timeout
+
         retry_strategy = Retry(
             total=max_retries,
             status_forcelist=[429, 500, 502, 503, 504],
             method_whitelist=["HEAD", "GET", "OPTIONS", "POST"],
             backoff_factor=backoff_factor,
         )
-        adapter = HTTPAdapter(max_retries=retry_strategy)
+        adapter = TimeoutHTTPAdapter(max_retries=retry_strategy, timeout=timeout)
         self.mount("https://", adapter)
         self.mount("http://", adapter)
 
     def get(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:  # type: ignore
-        if "timeout" in kwargs:
-            return super().get(self.base_url + url, *args, **kwargs)
-        return super().get(self.base_url + url, *args, timeout=self.timeout, **kwargs)
+        return super().get(self.base_url + url, *args, **kwargs)
 
     def post(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:  # type: ignore
-        if "timeout" in kwargs:
-            return super().post(self.base_url + url, *args, **kwargs)
-        return super().post(self.base_url + url, *args, timeout=self.timeout, **kwargs)
+        return super().post(self.base_url + url, *args, **kwargs)
