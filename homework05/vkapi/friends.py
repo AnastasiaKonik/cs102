@@ -36,8 +36,14 @@ def get_friends(
         fields = []
     access_token = config.VK_CONFIG.get("access_token")
     v = config.VK_CONFIG.get("version")
-    query = f"/friends.get?access_token={access_token}&user_id={user_id}&count={count}&fields={','.join(fields)}&v={v}"
-    response = session.get(query)
+    params = {
+        "access_token": access_token,
+        "user_id": user_id,
+        "count": count,
+        "fields": ",".join(fields),
+        "v": v,
+    }
+    response = session.get("/friends.get", params=params)
     r = response.json()
     if "error" in r:
         raise APIError(r["error"]["error_msg"])
@@ -82,8 +88,15 @@ def get_mutual(
     if count is None:
         count_str = ""
     if target_uids is None:
-        query = f"/friends.getMutual?access_token={access_token}&source_uid={source_uid_str}&target_uid={target_uid}&count={count_str}&order={order}&v={v}"
-        response = session.get(query)
+        params = {
+            "access_token": access_token,
+            "source_id": source_uid_str,
+            "target_uid": target_uid,
+            "count": count_str,
+            "order": order,
+            "v": v,
+        }
+        response = session.get("/friends.getMutual", params=params)
         r = response.json()
         if "error" in r:
             raise APIError(r["error"]["error_msg"])
@@ -91,8 +104,16 @@ def get_mutual(
     if progress is None:
         progress = lambda x: x
     for j, i in progress(enumerate(range(offset, len(target_uids), 100))):
-        inquiry = f"/friends.getMutual?access_token={access_token}&source_uid={source_uid_str}&target_uids={','.join(map(str, target_uids))}&count={count_str}&order={order}&offset={i}&v={v}"
-        response = session.get(inquiry)
+        params = {
+            "access_token": access_token,
+            "source_id": source_uid_str,
+            "target_uids": ",".join(map(str, target_uids)),
+            "count": count_str,
+            "order": order,
+            "offset": i,
+            "v": v,
+        }
+        response = session.get("/friends.getMutual", params=params)
         r = response.json()
         if "error" in r:
             raise APIError(r["error"]["error_msg"])

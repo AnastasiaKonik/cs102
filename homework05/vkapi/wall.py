@@ -21,24 +21,38 @@ def get_posts_2500(
     extended: int = 0,
     fields: tp.Optional[tp.List[str]] = None,
 ) -> tp.Dict[str, tp.Any]:
+    # fmt: off
     script = f"""
-    var i = 0; 
-    var result = [];
-        while i < {max_count} {{
-            result.push(API.wall.get(
-                        {{
+                var i = 0; 
+                var result = [];
+                while (i < {max_count}){{
+                    if ({offset}+i+100 > {count}){{
+                        result.push(API.wall.get({{
                             "owner_id": "{owner_id}",
                             "domain": "{domain}",
                             "offset": "{offset} +i",
-                            "count": "{count}",
+                            "count": "{count}-(i+{offset})",
                             "filter": "{filter}",
                             "extended": "{extended}",
                             "fields": "{fields}"
                         }}));
-            i = i + 100;
-        }}
-    return result;
+                        i = i + {max_count};   
+                    }} 
+                    else{{
+                        result.push(API.wall.get({{
+                            "owner_id": "{owner_id}",
+                            "domain": "{domain}",
+                            "offset": "{offset} +i",
+                            "filter": "{filter}",
+                            "extended": "{extended}",
+                            "fields": "{fields}"
+                        }}));
+                        i = i + 100;
+                    }}
+                }}
+                return result;
                 """
+    # fmt: on
     data = {"code": script}
     response = session.post("/execute", data=data).json()
     if "error" in response:
@@ -72,20 +86,21 @@ def get_wall_execute(
     :param fields: Список дополнительных полей для профилей и сообществ, которые необходимо вернуть.
     :param progress: Callback для отображения прогресса.
     """
-    data_frame = pd.DataFrame()
+
+    wall_df = pd.DataFrame()
+    # fmt: off
     script = f"""
-                        return API.wall.get({{
-    "owner_id": "{owner_id}",
-    "domain": "{domain}",
-    "offset": "0",
-    "count": "1",
-    "filter": "{filter}",
-    "extended": "0",
-    "fields": "",
-
-}});
-"""
-
+        return API.wall.get({{
+            "owner_id": "{owner_id}",
+            "domain": "{domain}",
+            "offset": "0",
+            "count": "1",
+            "filter": "{filter}",
+            "extended": "0",
+            "fields": "",
+        }});
+        """
+    # fmt: on
     data = {"code": script}
     response = session.post("/execute", data=data).json()
     if "error" in response:
@@ -95,10 +110,10 @@ def get_wall_execute(
     for _ in progress(
         range(0, math.ceil((response["response"]["count"] if count == 0 else count) / max_count))
     ):
-        data_frame = data_frame.append(
+        wall_df = wall_df.append(
             json_normalize(
                 get_posts_2500(owner_id, domain, offset, count, max_count, filter, extended, fields)
             )
         )
         time.sleep(1)
-    return data_frame
+    return wall_df

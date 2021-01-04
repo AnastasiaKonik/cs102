@@ -23,16 +23,15 @@ def age_predict(user_id: int) -> tp.Optional[float]:
             continue
         bdate = friend["bdate"]
         if len(bdate) > 6:
-            day, month, year = bdate.split(".")
-            day = int(day)
-            month = int(month)
-            year = int(year)
+            bdate_tuple = dt.datetime.strptime(bdate, "%d.%m.%Y").timetuple()
         else:
             continue
-        if (current.month > month) or (current.month == month and current.day > day):
-            age = current.year - year
+        if (current.month > bdate_tuple.tm_mon) or (
+            current.month == bdate_tuple.tm_mon and current.day > bdate_tuple.tm_mday
+        ):
+            age = current.year - bdate_tuple.tm_year
         else:
-            age = current.year - year - 1
+            age = current.year - bdate_tuple.tm_year - 1
         ages.append(age)
     if not ages:
         return None

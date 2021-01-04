@@ -25,7 +25,7 @@ def ego_network(
     for i in mutual:
         for common_friends in i["common_friends"]:
             edges.append((common_friends, i["id"]))
-    return sorted(edges)
+    return edges
 
 
 def plot_ego_network(net: tp.List[tp.Tuple[int, int]]) -> None:
