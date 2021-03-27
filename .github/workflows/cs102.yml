@@ -25,5 +25,5 @@ jobs:
         run: |
           pylint --exit-zero ${{ github.head_ref }}
       - name: Run pytest
-          run: |
-            pytest ${{ github.head_ref }} --cov ${{ github.head_ref }}
+        run: |
+          pytest ${{ github.head_ref }} --cov ${{ github.head_ref }}
