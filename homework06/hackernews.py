@@ -25,10 +25,8 @@ def news_list():
 def add_label():
     """ Add label to news """
     s = get_session(engine)
-    r = request.query_string
-    label, id = r.split("&")
-    label = label.split("=")[1]
-    id = id.split("=")[1]
+    label = request.query["label"]
+    id = request.query["id"]
     update_label(session=s, id=id, label=label)
 
     redirect("/news")
@@ -56,13 +54,18 @@ def classify_news():
         [news.label for news in classified_by_hands],
     )
     data_to_classify = s.query(News).filter(News.label == None).all()
-    return template(
-        "news_template",
-        rows=sorted(
-            data_to_classify, key=lambda news: weight[model.predict([clean(news.title).lower()])[0]]
-        ),
-    )
 
+    predictions = []
 
-if __name__ == "__main__":
-    run(host="localhost", port=8080)
+    titles = [clean(data_to_classify.title.lower)]
+    [labels] = model.predict(titles)
+    predictions.append((data_to_classify, labels, weight[labels]))
+
+    sorted_predictions = sorted(predictions, key=lambda prediction: prediction[2])
+
+    rows = [prediction[0] for prediction in sorted_predictions]
+
+    return template("news_template", rows=rows)
+
+    if __name__ == "__main__":
+        run(host="localhost", port=8080)

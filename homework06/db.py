@@ -31,11 +31,8 @@ def get_session(engine: MockConnection) -> Session:
 
 def record_news(session: Session, news_list: tp.List[tp.Dict[str, tp.Union[int, str]]]) -> None:
     """ Record news in Base """
-    for item in news_list:
-        news_instance = News(
-            title=item["title"], author=item["author"], points=item["points"], url=item["url"]
-        )
-        session.add(news_instance)
+    news = [News(**news_data) for news_data in news_list]
+    session.add_all(news)
     session.commit()
 
 
