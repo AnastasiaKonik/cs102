@@ -60,16 +60,16 @@ class BaseHTTPRequestHandler(BaseRequestHandler):
         self._parsed = False
 
     def handle(self) -> None:
-        request1 = self.parse_request()
-        response1 = self.response_klass(status=500, headers={}, body=b"")
-        if request1 is not None:
+        request = self.parse_request()
+        response = self.response_klass(status=500, headers={}, body=b"")
+        if request is not None:
             try:
-                response1 = self.handle_request(request1)
+                response = self.handle_request(request)
             except Exception as e:
                 print("Failed to handle request", e)
         else:
-            response1 = self.response_klass(status=400, headers={}, body=b"")
-        self.handle_response(response1)
+            response = self.response_klass(status=400, headers={}, body=b"")
+        self.handle_response(response)
         self.close()
 
     def parse_request(self) -> tp.Optional[request.HTTPRequest]:
@@ -93,13 +93,13 @@ class BaseHTTPRequestHandler(BaseRequestHandler):
                 print(f"Parser error {self.address} - {exc}")
                 break
         if self._parsed:
-            request1 = self.request_klass(
+            request = self.request_klass(
                 method=self.parser.get_method(),
                 url=self._url,
                 headers=self._headers,
                 body=self._body,
             )
-            return request1
+            return request
         return None
 
     @tp.no_type_check
@@ -108,15 +108,15 @@ class BaseHTTPRequestHandler(BaseRequestHandler):
     ) -> response.HTTPResponse:
         return self.response_klass(status=status, headers=request.headers, body=request.body)
 
-    def handle_response(self, response3: response.HTTPResponse) -> None:
-        self.socket.sendall(response3.to_http1())
+    def handle_response(self, response: response.HTTPResponse) -> None:
+        self.socket.sendall(response.to_http1())
 
     def on_url(self, url: bytes) -> None:
         self._url = url
         print("on_url complete", url)
 
     def on_header(self, name: bytes, value: bytes) -> None:
-        self._headers = {name: value}
+        self._headers[name] = value
         print("on_header complete", name, value)
 
     def on_body(self, body: bytes) -> None:

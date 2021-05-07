@@ -47,12 +47,12 @@ class StaticHTTPRequestHandler(BaseHTTPRequestHandler):
             parsed_url = urlparse(url_normalize(url))
             url_path = parsed_url.path + "index.html" if parsed_url.path == "/" else parsed_url.path
             path = pathlib.Path(str(server.document_root.absolute()) + url_path)  # type: ignore
-            print(path)
             if os.path.exists(path) and os.path.isfile(path):
                 try:
-                    with open(path, "rb") as f:
-                        content = f.read()
-                    content_type, _ = mimetypes.guess_type(url)
+                    if request.method == b"GET":
+                        with open(path, "rb") as f:
+                            content = f.read()
+                        content_type, _ = mimetypes.guess_type(url)
                 except OSError:
                     status = 404
                     print("Invalid file requested: OSError", parsed_url.path)
