@@ -33,8 +33,9 @@ class WSGIRequestHandler(BaseHTTPRequestHandler):
         environ = request.to_environ()
         environ['SERVER_NAME'] = 'localhost'
         environ['SERVER_PORT'] = '5000'
-        app = self.server.get_up()
+        app = self.server.get_app()
         result = app(environ, self.response_klass().start_response)
         response = self.response_klass()
-        response.body = b"".join(result.encode())
+        response.body = b"".join(result)
+        print(environ)
         return response

@@ -10,8 +10,8 @@ from httpserver import HTTPRequest
 @dataclasses.dataclass
 class WSGIRequest(HTTPRequest):
     def to_environ(self) -> tp.Dict[str, tp.Any]:
-        query_str = urlparse(HTTPRequest.url).query
-        path = urlparse(HTTPRequest.url).path
+        query_str = urlparse(self.url).query
+        path = urlparse(self.url).path
         environ = {
             'REQUEST_METHOD': self.method.decode(),
             'SCRIPT_NAME': '',
