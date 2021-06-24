@@ -27,9 +27,7 @@ async def get_note_by_id(note_id: int, current_user: User = Depends(get_current_
 
 
 @app.patch("/note/{note_id}")
-async def edit_note(
-    note_id: int, note: NoteModel, current_user: User = Depends(get_current_user)
-):
+async def edit_note(note_id: int, note: NoteModel, current_user: User = Depends(get_current_user)):
     note_db = await Note.filter(id=note_id, author=current_user).first()
     if not note_db:
         raise HTTPException(
